@@ -105,6 +105,7 @@ router.get("/client/:id", patientController.getPatientById);
 router.put("/client/update/:id", patientController.updatePatient);
 router.put("/client/updateBmi/:id", patientController.updatePatientBmi);
 router.delete("/client/delete/:id", patientController.deletePatient);
+router.get("/client/findByPhone/:phone", patientController.getPatientByPhone);
 
 // redirect to story
 router.post("/story/redirect", patientController.redirectPatient);

@@ -5,118 +5,19 @@ const adminDB = require("../model/adminModel");
 const expenseModel = require("../model/expenseModel");
 
 class PatientController {
-  // async createPatient(req, res) {
-  //   let io = req.app.get("socket");
-  //   try {
-  //     let {
-  //       firstname,
-  //       lastname,
-  //       idNumber,
-  //       phone,
-  //       address,
-  //       year,
-  //       gender,
-  //       paymentType,
-  //       payment_amount,
-  //       services, // Extract services from req.body
-  //       doctorId,
-  //       description,
-  //     } = req.body;
-
-  //     // Telefon raqami orqali bemorni qidirish
-  //     let patient = await patientsDB.findOne({ phone });
-  //     if (!patient) {
-  //       patient = await patientsDB.create({
-  //         firstname,
-  //         lastname,
-  //         idNumber,
-  //         phone,
-  //         address,
-  //         year,
-  //         gender,
-  //       });
-  //     }
-
-  //     // Validate doctorId
-  //     if (!doctorId) return response.error(res, "doctorId is required");
-
-  //     // Shu doktorga yozilgan, view: false bo'lgan storylarni sanash
-  //     const today = new Date();
-  //     today.setHours(0, 0, 0, 0);
-  //     const tomorrow = new Date(today);
-  //     tomorrow.setDate(today.getDate() + 1);
-
-  //     const count = await storyDB.countDocuments({
-  //       doctorId: doctorId,
-  //       view: 0,
-  //       createdAt: { $gte: today, $lt: tomorrow },
-  //     });
-
-  //     // order_number = navbat raqami
-  //     const orderNumber = count + 1;
-
-  //     let doctor = await adminDB.findById(doctorId);
-  //     if (!doctor) return response.error(res, "Doctor not found");
-
-  //     // Calculate total service price (if services provided)
-  //     const totalServicePrice = services.reduce(
-  //       (sum, service) => sum + service.price || 0
-  //     );
-
-  //     // Update payment_status logic (optional)
-  //     // Example: Check if payment_amount matches doctor's admission_price + service prices
-  //     const paymentStatus =
-  //       doctor &&
-  //       payment_amount === doctor &&
-  //       admission_price + totalServicePrice;
-
-  //     // Story yaratish
-  //     const story = await storyDB.create({
-  //       patientId: patient._id,
-  //       doctorId,
-  //       order_number: orderNumber,
-  //       paymentType,
-  //       payment_status: paymentStatus,
-  //       payment_amount,
-  //       services: services || [], // Save services to storyDB
-  //       description: description || "",
-  //     });
-
-  //     await expenseModel.create({
-  //       name: "Bemor to'lovi",
-  //       amount: payment_amount,
-  //       type:"kirim",
-  //       category:"Bemor to'lovi",
-  //       description: "Bemor to'lovi",
-  //       paymentType: paymentType,
-  //       relevantId: story._id,
-  //     })
-
-  //     io.emit("new_story", story);
-  //     return response.success(res, "Bemor va story muvaffaqiyatli yaratildi", {
-  //       patient: {
-  //         firstname,
-  //         lastname,
-  //         phone,
-  //         idNumber,
-  //         address,
-  //         order_number: orderNumber,
-  //         createdAt: story.createdAt,
-  //       },
-  //       doctor: {
-  //         firstName: doctor.firstName,
-  //         lastName: doctor.lastName,
-  //         specialization: doctor.specialization,
-  //         phone: phone,
-  //         admission_price: totalServicePrice,
-  //       },
-  //       services: services || [], // Return services in response
-  //     });
-  //   } catch (err) {
-  //     console.error("Error in createPatient:", err);
-  //     return response.serverError(res, "Server error occurred", err.message);
-  //   }
-  // }
+  // Telefon raqam bo‘yicha bemorni olish
+  async getPatientByPhone(req, res) {
+    try {
+      const phone = req.params.phone.replace(/\s/g, "");
+      const patient = await patientsDB.findOne({ phone });
+      if (!patient) {
+        return response.notFound(res, "Bemor topilmadi");
+      }
+      return response.success(res, "Bemor topildi", patient);
+    } catch (err) {
+      return response.serverError(res, err.message, err);
+    }
+  }
 
   async createPatient(req, res) {
     let io = req.app.get("socket");
