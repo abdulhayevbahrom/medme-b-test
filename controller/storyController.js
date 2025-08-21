@@ -214,6 +214,7 @@ class StoryController {
           startTime: story.startTime,
           services: story.services,
           visitHistory,
+          createdAt: story.createdAt,
         });
       }
 

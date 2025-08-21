@@ -78,7 +78,7 @@ const storySchema = new Schema(
 
     startTime: {
       type: Date,
-      // default: Date.now,
+      default: Date.now,
       // required: true,
     },
     endTime: {

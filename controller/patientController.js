@@ -175,7 +175,7 @@ class PatientController {
       const count = await storyDB
         .countDocuments({
           doctorId: doctorId,
-          view: 0,
+          // view: 0,
           createdAt: { $gte: today, $lt: tomorrow },
         })
         .session(session);
@@ -485,7 +485,7 @@ class PatientController {
       const count = await storyDB
         .countDocuments({
           doctorId: story.doctorId._id,
-          view: false,
+          // view: false,
           createdAt: { $gte: today, $lt: tomorrow },
         })
         .session(session);
